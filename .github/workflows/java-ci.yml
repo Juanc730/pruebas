@@ -3,33 +3,61 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "main" ]
+    paths: ['**.java', '.github/workflows/java-ci.yml', 'pom.xml']
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build:
-
+  jacoco-java-maven:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
+        distribution: 'adopt'
         java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Cache Maven packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-maven-
+
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package -Pcoverage
 
-    - name: Run tests with Maven
-      run: mvn test
+    - name: Generate JaCoCo badge
+      id: jacoco
+      uses: cirirello/jacoco-badge-generator@v2
+      with:
+        bagdes-directory: badges
+        generate-branches-badge: true
+        generate-summary: true
+    
+    - name: Log coverage percentage to workflow output
+      run: |
+        echo "coverage: ${{ steps.jacoco.outputs.coverage }}%"
+        echo "branches: ${{ steps.jacoco.outputs.branches }}%"
 
-      
+    - name: Upload JaCoCo coverage report as a workflow artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: jacoco-coverage-report
+        path: target/site/jacoco
+
+    - name: Comment on PR with coverage percentages
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        REPORT=$(<badges/coverage-summary.json)
+        COVERAGE=$(jq -r '.coverage' <<< "$REPORT")%
+        BRANCHES=$(jq -r '.branches' <<< "$REPORT")%
+        NEWLINE=$'\n'
+        BODY="## JaCoCo Code Coverage Report${NEWLINE}${NEWLINE}- Lines: **$COVERAGE**${NEWLINE}- Branches: **$BRANCHES**"
+        gh pr comment ${{ github.event.pull_request.number }} -b "${BODY}"
+      continue-on-error: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+    - name: Get the coverage information
+      run: |
+        echo "Total coverage: ${{ steps.jacoco.outputs.coverage-overall }}"
+        echo "Coverage: ${{ steps.jacoco.outputs.coverage }}%"
+  

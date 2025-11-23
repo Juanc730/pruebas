@@ -40,6 +40,25 @@
                     </includes>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>org.jacoco</artifactId>
+                <groupId>jacoco-maven-plugin</groupId>
+                <version>0.8.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-code-coverage-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
