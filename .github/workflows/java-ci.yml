@@ -26,10 +26,10 @@ jobs:
 
     - name: Generate JaCoCo badge
       id: jacoco
-      uses: dorny/paths-filter@v2
+      uses: cicirello/jacoco-badge-generator-action@v4
       with:
-        badges-directory: badges
-        generate-braches-badge: true
+        badge-directory: badges
+        generate-branches-badge: true
         generate-summary: true
     
     - name: Log coverage percentage to workflow output
