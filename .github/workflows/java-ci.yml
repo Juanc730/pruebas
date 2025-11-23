@@ -40,8 +40,8 @@ jobs:
     - name: Upload JaCoCo coverage report as a workflow artifact
       uses: actions/upload-artifact@v3
       with:
-        name: jacoco-coverage-report
-        path: target/site/jacoco
+        name: jacoco-report
+        path: target/site/jacoco/
 
     - name: Comment on PR with coverage percentages
       if: ${{ github.event_name == 'pull_request' }}
