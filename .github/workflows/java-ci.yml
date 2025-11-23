@@ -26,7 +26,7 @@ jobs:
 
     - name: Generate JaCoCo badge
       id: jacoco
-      uses: cirirello/jacoco-badge-generator-action@v2
+      uses: cirirello/jacoco-bagde-generator@v1.3.0
       with:
         bagdes-directory: badges
         generate-branches-badge: true
