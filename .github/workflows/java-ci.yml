@@ -41,7 +41,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
-        path: badges/
+        path: target/site/jacoco/
 
     - name: Comment on PR with coverage percentages
       if: ${{ github.event_name == 'pull_request' }}
