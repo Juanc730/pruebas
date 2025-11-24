@@ -58,6 +58,6 @@ jobs:
   
     - name: Get the coverage information
       run: |
-        echo "Total coverage: ${{ steps.jacoco.outputs.coverage-overall }}"
+        echo "Total coverage: ${{ steps.jacoco.outputs.coverage-summary }}%"
         echo "Coverage: ${{ steps.jacoco.outputs.coverage }}%"
   
