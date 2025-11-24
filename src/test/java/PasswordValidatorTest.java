@@ -5,7 +5,7 @@ import com.example.PasswordValidator;
 
 class PasswordValidatorTest {
     
-    // Caso 1: Contraseña nula o vacía
+    // Caso 1: Contraseña nula
     @Test
     void ContraseñaNula() {
         assertAll(
