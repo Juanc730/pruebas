@@ -34,14 +34,14 @@ jobs:
     
     - name: Log coverage percentage to workflow output
       run: |
-        echo "coverage: ${{ steps.jacoco.outputs.coverage }}%"
-        echo "branches: ${{ steps.jacoco.outputs.branches }}%"
+        echo "coverage: ${{ steps.jacoco.outputs.coverage }}"
+        echo "branches: ${{ steps.jacoco.outputs.branches }}"
 
     - name: Upload JaCoCo coverage report as a workflow artifact
       uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
-        path: target/site/jacoco/
+        path: target/site/jacoco
 
     - name: Comment on PR with coverage percentages
       if: ${{ github.event_name == 'pull_request' }}
@@ -58,6 +58,6 @@ jobs:
   
     - name: Get the coverage information
       run: |
-        echo "Total coverage: ${{ steps.jacoco.outputs.coverage-summary }}%"
-        echo "Coverage: ${{ steps.jacoco.outputs.coverage }}%"
+        echo "Total coverage: ${{ steps.jacoco.outputs.coverage-overall }}"
+        echo "Coverage: ${{ steps.jacoco.outputs.coverage }}"
   
